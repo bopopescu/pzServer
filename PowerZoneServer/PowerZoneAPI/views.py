@@ -2,6 +2,8 @@ from .models import Locale, Presa, Recensione
 from .serializers import LocaleSerializer, PresaSerializer, RecensioneSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 
 
 class ListaLocali(generics.ListAPIView):
@@ -55,14 +57,30 @@ class DettaglioRecensione(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RecensioneSerializer
 
 
-class RecensioniPresa(generics.ListAPIView):
+class RecensioniLocale(generics.ListAPIView):
     serializer_class = RecensioneSerializer
 
     def get_queryset(self):
-        """
-        Questa view ritorna la lista delle recensioni di una presa
-        :return:
-        """
+               #Questa view ritorna la lista delle recensioni di una presa
+       
+        localeid = self.kwargs['locale']
+        return Recensione.objects.filter(locale_id=localeid)
+
+
+class LocaliDistanza(generics.ListAPIView):
+    serializer_class = LocaleSerializer
+
+
+    def get_queryset(self):
+        # Ritorna dato un punto e la distanza tutti i locali entro la distanza del punto
+
+        dist = int(self.request.query_params.get('distanza',None))
+        lon = float(self.request.query_params.get('lon'))
+        lat = float(self.request.query_params.get('lat'))
+        print(dist)
+        pnt = Point(lat, lon)
+        return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)))
+
 
 """
 from rest_framework import status
