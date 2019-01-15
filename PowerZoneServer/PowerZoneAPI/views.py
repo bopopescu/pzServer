@@ -4,6 +4,9 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 
 class ListaLocali(generics.ListAPIView):
@@ -80,6 +83,7 @@ class LocaliDistanza(generics.ListAPIView):
         print(dist)
         pnt = Point(lat, lon)
         return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)))
+
 
 
 """
