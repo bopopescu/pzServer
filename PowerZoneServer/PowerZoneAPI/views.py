@@ -4,9 +4,21 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
+from rest_auth.registration.views import SocialLoginView
+from rest_auth.social_serializers import TwitterLoginSerializer
+from rest_framework import permissions
+from  .permissions import IsOwnerOrReadOnly
+
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+
+
+class TwitterLogin(SocialLoginView):
+    serializer_class = TwitterLoginSerializer
+    adapter_class = TwitterOAuthAdapter
 
 
 class ListaLocali(generics.ListAPIView):
@@ -46,6 +58,7 @@ class DettaglioPresa(generics.RetrieveUpdateDestroyAPIView):
 class ListaRecensioni(generics.ListAPIView):
     queryset = Recensione.objects.all()
     serializer_class = RecensioneSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
     def post(self, request, format=None):
         serializer = RecensioneSerializer(data=request.data)
@@ -54,9 +67,13 @@ class ListaRecensioni(generics.ListAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class DettaglioRecensione(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recensione.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
     serializer_class = RecensioneSerializer
 
 

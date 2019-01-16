@@ -11,6 +11,9 @@ urlpatterns = [
     path('recensioni/', views.ListaRecensioni.as_view()),
     path('recensioni/<int:pk>', views.DettaglioRecensione.as_view()),
     path('recensioni/locale=<int:locale>', views.RecensioniLocale.as_view()),
+    path('rest-auth/twitter/', views.TwitterLogin.as_view(), name='twitter_login'),
+    path('rest-auth/facebook/', views.FacebookLogin.as_view(), name='fb_login'),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
