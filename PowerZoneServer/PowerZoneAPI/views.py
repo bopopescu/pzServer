@@ -9,16 +9,9 @@ from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
 from rest_framework import permissions
-from  .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 
 
-class FacebookLogin(SocialLoginView):
-    adapter_class = FacebookOAuth2Adapter
-
-
-class TwitterLogin(SocialLoginView):
-    serializer_class = TwitterLoginSerializer
-    adapter_class = TwitterOAuthAdapter
 
 
 class ListaLocali(generics.ListAPIView):
@@ -97,11 +90,48 @@ class LocaliDistanza(generics.ListAPIView):
         dist = int(self.request.query_params.get('distanza',None))
         lon = float(self.request.query_params.get('lon'))
         lat = float(self.request.query_params.get('lat'))
-        print(dist)
+
         pnt = Point(lat, lon)
         return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)))
 
 
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+
+
+class TwitterLogin(SocialLoginView):
+    serializer_class = TwitterLoginSerializer
+    adapter_class = TwitterOAuthAdapter
+
+
+class LocaliDistanzaFiltro(generics.ListAPIView):
+    serializer_class = LocaleSerializer
+
+
+    def get_queryset(self):
+        dist = self.request.query_params.get('distanza', None)
+        lon = float(self.request.query_params.get('lon'))
+        lat = float(self.request.query_params.get('lat'))
+        tipo = self.request.query_params.get('tipo', None)
+        presa = self.request.query_params.get('presa', None)
+        if lon is not None and lat is not None:
+            pnt = Point(lat, lon)
+            if dist is not None:
+                dist = int(dist)
+                if tipo is not None:
+                    if presa is not None:
+
+                        return Locale.objects.filter(
+                            coordinate__distance_lte=(pnt, D(m=dist)),
+                            tipo_locale=tipo,
+                            prese__tipo_presa__isnull=False,
+                            prese__tipo_presa=presa)
+                    else:
+                        return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)), tipo_locale=tipo)
+                else:
+                    return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)))
+            else:
+                return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=1000)))
 
 """
 from rest_framework import status
