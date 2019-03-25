@@ -25,7 +25,7 @@ SECRET_KEY = 'f$e6pp=flmql&_m&vrk%!@9j0e@4riiwbt5h6%&t1xczjxw(j!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.101', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.0.105', '127.0.0.1']
 
 
 # Application definition
@@ -38,12 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'PowerZoneAPI.apps.PowerzoneapiConfig',
     #'PowerZoneAPI',
+    'PowerZoneAPI.apps.PowerzoneapiConfig',
+
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
+    #'djoser',
 
     #Modulo per accesso utenti
     'rest_auth',
@@ -129,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'it-it'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Rome'
 
 USE_I18N = True
 

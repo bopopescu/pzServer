@@ -3,6 +3,13 @@ from django.contrib.auth.models import User
 from django.contrib.gis.db import models as geo
 
 
+class TipoPresa(models.Model):
+    tipo = models.CharField(max_length=50, default='')
+
+    def __str__(self):
+        return self.tipo
+
+
 class Locale(models.Model):
         # Possibili tipi di locale
     TIPI_LOCALE = (
@@ -18,26 +25,7 @@ class Locale(models.Model):
     sitoweb = models.URLField(blank=True, default='')
 
     def __str__(self):
-        return self.nome;
-
-
-class Presa(models.Model):
-    TIPI_PRESA = (
-        ('PR16', 'Presa elettrica grande'),
-        ('PR10', 'Presa elettrica piccola'),
-        ('PRSC', 'Presa Schuko'),
-        ('PRU2', 'Presa USB'),
-        ('PRU3', 'Presa USB 3.0'),
-        ('PRAU', 'Presa auto elettrica'),
-    )
-    locale = models.ForeignKey(Locale, related_name='prese', on_delete=models.CASCADE)
-    tipo_presa = models.CharField(max_length=4, choices=TIPI_PRESA)
-    descrizione = models.CharField(max_length=250, blank=True, default='')
-    path_foto = models.ImageField(upload_to='foto_prese/', default='', blank=True)
-
-    # Questo metodo ritorna durante la stampa solo i dati richiesti
-    def __str__(self):
-        return self.locale.nome + ' : ' + self.tipo_presa
+        return self.nome
 
 
 class Recensione(models.Model):
@@ -46,4 +34,24 @@ class Recensione(models.Model):
     testo = models.CharField(max_length=250)
     locale = models.ForeignKey(Locale, related_name='recensioni', on_delete=models.CASCADE)
     recensore = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
+
+class Presa(models.Model):
+    """TIPI_PRESA = (
+        ('PR16', 'Presa elettrica grande'),
+        ('PR10', 'Presa elettrica piccola'),
+        ('PRSC', 'Presa Schuko'),
+        ('PRU2', 'Presa USB'),
+        ('PRU3', 'Presa USB 3.0'),
+        ('PRAU', 'Presa auto elettrica'),
+        ('PRBI', 'Bipresa'),
+    )"""
+    locale = models.ForeignKey(Locale, related_name='prese', on_delete=models.CASCADE)
+    presa = models.ForeignKey(TipoPresa, on_delete=models.CASCADE)
+    descrizione = models.CharField(max_length=250, blank=True, default='')
+    path_foto = models.ImageField(upload_to='foto_prese/', default='', blank=True)
+
+    # Questo metodo ritorna durante la stampa solo i dati richiesti
+    def __str__(self):
+        return self.presa.tipo + " : " + self.locale.nome
 

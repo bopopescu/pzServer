@@ -7,6 +7,7 @@ urlpatterns = [
     path('locali/<int:pk>/', views.DettaglioLocale.as_view()),
     path('locali/v1/', views.LocaliDistanza.as_view()),
     path('locali/filtra', views.LocaliDistanzaFiltro.as_view()),
+
     path('prese/', views.ListaPrese.as_view()),
     path('prese/<int:pk>/', views.DettaglioPresa.as_view(), name='prese-detail'),
     path('recensioni/', views.ListaRecensioni.as_view()),

@@ -12,8 +12,6 @@ from rest_framework import permissions
 from .permissions import IsOwnerOrReadOnly
 
 
-
-
 class ListaLocali(generics.ListAPIView):
     queryset = Locale.objects.all()
     serializer_class = LocaleSerializer
@@ -74,8 +72,8 @@ class RecensioniLocale(generics.ListAPIView):
     serializer_class = RecensioneSerializer
 
     def get_queryset(self):
-               #Questa view ritorna la lista delle recensioni di una presa
-       
+        # Questa view ritorna la lista delle recensioni di una presa
+
         localeid = self.kwargs['locale']
         return Recensione.objects.filter(locale_id=localeid)
 
@@ -83,11 +81,10 @@ class RecensioniLocale(generics.ListAPIView):
 class LocaliDistanza(generics.ListAPIView):
     serializer_class = LocaleSerializer
 
-
     def get_queryset(self):
         # Ritorna dato un punto e la distanza tutti i locali entro la distanza del punto
 
-        dist = int(self.request.query_params.get('distanza',None))
+        dist = int(self.request.query_params.get('distanza', None))
         lon = float(self.request.query_params.get('lon'))
         lat = float(self.request.query_params.get('lat'))
 
@@ -106,7 +103,6 @@ class TwitterLogin(SocialLoginView):
 
 class LocaliDistanzaFiltro(generics.ListAPIView):
     serializer_class = LocaleSerializer
-
 
     def get_queryset(self):
         dist = self.request.query_params.get('distanza', None)
@@ -132,6 +128,7 @@ class LocaliDistanzaFiltro(generics.ListAPIView):
                     return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)))
             else:
                 return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=1000)))
+
 
 """
 from rest_framework import status
