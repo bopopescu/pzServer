@@ -10,11 +10,15 @@ from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
 from rest_framework import permissions
 from .permissions import IsOwnerOrReadOnly
+from django.db.models import Avg, F, Count
 
 
 class ListaLocali(generics.ListAPIView):
     queryset = Locale.objects.all()
     serializer_class = LocaleSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().annotate(media_recensioni=Avg(F('recensioni__voto')))
 
     def post(self, request, format=None):
         serializer = LocaleSerializer(data=request.data)

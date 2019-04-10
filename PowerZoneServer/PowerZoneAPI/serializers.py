@@ -1,23 +1,17 @@
 from rest_framework import serializers
-from .models import Locale, Presa, Recensione
+from .models import Locale, Presa, Recensione, TipoPresa
 from django.contrib.auth.models import User
-from django.db.models import Count
+from django.db.models import Count, Avg
 
 
 class LocaleSerializer(serializers.ModelSerializer):
-    prese = serializers.StringRelatedField(many=True)
-    recensioni = serializers.StringRelatedField(many=True)
-    totale_recensioni = serializers.SerializerMethodField(read_only=True);
-
-
-    totale_prese = serializers.SerializerMethodField(read_only=True);
+    totale_recensioni = serializers.SerializerMethodField(read_only=True)
+    media_recensioni = serializers.FloatField(read_only=True)
+    totale_prese = serializers.SerializerMethodField(read_only=True)
     
     def get_totale_prese(self, locale):
-
-        return Locale.objects.values('prese__presa__tipo').order_by().annotate(Count('prese__presa__tipo'))
-        #return Locale.objects.annotate(numero_prese_tipo=Count(''))
-        #return Locale.objects.filter(id=id).values('prese__presa__tipo').annotate(dcount=Count('prese__presa__tipo'))
-
+        return Presa.objects.values('presa__tipo').filter(locale=locale).annotate(num_prese=Count('presa__tipo'))
+        
     def get_totale_recensioni(self, locale):
         return locale.recensioni.count()
 
