@@ -19,7 +19,7 @@ class Locale(models.Model):
     )
     nome = models.CharField(max_length=45, blank=True, default='')
     tipo_locale = models.CharField(max_length=4, choices=TIPI_LOCALE, default='FREE')
-    coordinate = geo.PointField(srid=4326)
+    coordinate = geo.PointField(spatial_index=True, geography=True)
     email = models.EmailField(max_length=100, blank=True, default='')
     telefono = models.CharField(max_length=15, blank=True, default='')
     sitoweb = models.URLField(blank=True, default='')

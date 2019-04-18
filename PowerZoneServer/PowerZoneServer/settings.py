@@ -25,7 +25,7 @@ SECRET_KEY = 'f$e6pp=flmql&_m&vrk%!@9j0e@4riiwbt5h6%&t1xczjxw(j!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.101', '192.168.0.103', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.0.101', '192.168.0.103', '192.168.0.108', '127.0.0.1']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_gis',
     #'djoser',
 
     # Modulo per accesso utenti

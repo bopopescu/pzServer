@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Locale, Presa, Recensione, TipoPresa
+from .models import Locale, Presa, Recensione
 from django.contrib.auth.models import User
-from django.db.models import Count, Avg
+from django.db.models import Count
 
 
 class LocaleSerializer(serializers.ModelSerializer):
