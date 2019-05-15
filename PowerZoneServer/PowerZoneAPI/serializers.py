@@ -10,7 +10,7 @@ class LocaleSerializer(serializers.ModelSerializer):
     totale_prese = serializers.SerializerMethodField(read_only=True)
     
     def get_totale_prese(self, locale):
-        return Presa.objects.values('presa__tipo').filter(locale=locale).annotate(num_prese=Count('presa__tipo'))
+        return Presa.objects.values('presa').filter(locale=locale).annotate(num_prese=Count('presa'))
 
     def get_totale_recensioni(self, locale):
         return locale.recensioni.count()

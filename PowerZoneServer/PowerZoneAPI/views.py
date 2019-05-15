@@ -115,7 +115,7 @@ class LocaliDistanzaFiltro(generics.ListAPIView):
         tipo = self.request.query_params.get('tipo', None)
         presa = self.request.query_params.get('presa', None)
         if lon is not None and lat is not None:
-            pnt = Point(lat, lon)
+            pnt = Point(lon, lat)
             if dist is not None:
                 dist = int(dist)
                 if tipo is not None:
@@ -124,14 +124,34 @@ class LocaliDistanzaFiltro(generics.ListAPIView):
                         return Locale.objects.filter(
                             coordinate__distance_lte=(pnt, D(m=dist)),
                             tipo_locale=tipo,
-                            prese__tipo_presa__isnull=False,
-                            prese__tipo_presa=presa)
+                            #prese__isnull=False,
+                            #prese__tipo_presa=presa,
+                            prese__presa=presa
+                        )
                     else:
                         return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)), tipo_locale=tipo)
                 else:
-                    return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)))
+                    if presa is not None:
+
+                        return Locale.objects.filter(
+                            coordinate__distance_lte=(pnt, D(m=dist)),
+                            prese__isnull=False,
+                            #prese__tipo_presa=presa,
+                            prese__presa=presa
+                        )
+                    else:
+                        return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=dist)))
             else:
-                return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=1000)))
+                if presa is not None:
+                    return Locale.objects.filter(
+                        coordinate__distance_lte=(pnt, D(m=1000)),
+
+                        prese__isnull=False,
+                        # prese__tipo_presa=presa,
+                        prese__presa=presa
+                    )
+                else:
+                    return Locale.objects.filter(coordinate__distance_lte=(pnt, D(m=1000)))
 
 
 """

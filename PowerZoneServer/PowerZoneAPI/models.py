@@ -2,13 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models as geo
 
-
+"""
 class TipoPresa(models.Model):
     tipo = models.CharField(max_length=50, default='')
 
     def __str__(self):
         return self.tipo
-
+"""
 
 class Locale(models.Model):
         # Possibili tipi di locale
@@ -37,21 +37,18 @@ class Recensione(models.Model):
 
 
 class Presa(models.Model):
-    """TIPI_PRESA = (
-        ('PR16', 'Presa elettrica grande'),
-        ('PR10', 'Presa elettrica piccola'),
-        ('PRSC', 'Presa Schuko'),
-        ('PRU2', 'Presa USB'),
-        ('PRU3', 'Presa USB 3.0'),
+    TIPI_PRESA = (
+        ('PREL', 'Presa elettrica'),
+        ('PUSB', 'Presa USB'),
         ('PRAU', 'Presa auto elettrica'),
-        ('PRBI', 'Bipresa'),
-    )"""
+    )
     locale = models.ForeignKey(Locale, related_name='prese', on_delete=models.CASCADE)
-    presa = models.ForeignKey(TipoPresa, on_delete=models.CASCADE)
+    presa = models.CharField(max_length=4, choices=TIPI_PRESA, default='PREL')
+    #presa = models.ForeignKey(TipoPresa, on_delete=models.CASCADE)
     descrizione = models.CharField(max_length=250, blank=True, default='')
     path_foto = models.ImageField(upload_to='foto_prese/', default='', blank=True)
 
     # Questo metodo ritorna durante la stampa solo i dati richiesti
     def __str__(self):
-        return self.presa.tipo + " : " + self.locale.nome
+        return self.presa + " : " + self.locale.nome
 
