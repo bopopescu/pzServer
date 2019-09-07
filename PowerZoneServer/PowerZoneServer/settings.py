@@ -25,7 +25,7 @@ SECRET_KEY = 'f$e6pp=flmql&_m&vrk%!@9j0e@4riiwbt5h6%&t1xczjxw(j!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.105', '192.168.0.102', '192.168.0.108', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.34', '192.168.1.35', '192.168.0.109', '127.0.0.1', '192.168.0.110', '192.168.43.18','192.168.43.202','192.168.0.105']
 
 
 # Application definition
@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'PowerZoneAPI',
-    'PowerZoneAPI.apps.PowerzoneapiConfig',
+    'PowerZoneAPI',
+    #'PowerZoneAPI.apps.PowerzoneapiConfig',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -97,9 +97,9 @@ WSGI_APPLICATION = 'PowerZoneServer.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'pzDB',
-        'USER': 'gianfrancocedro',
-        'PASSWORD': 'root',
+        'NAME': 'Powerzoners',
+        'USER': 'postgres',
+        'PASSWORD': 'Potcircos',
         'HOST': 'localhost',
         'PORT': '5432'
     }
@@ -138,7 +138,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
@@ -159,6 +160,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ]
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'PowerZoneAPI.serializers.UserSerializer'
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

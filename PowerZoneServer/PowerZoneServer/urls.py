@@ -13,9 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from allauth.socialaccount.providers import google
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+
 
 router = routers.DefaultRouter()
 
@@ -25,5 +27,6 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('accounts/', include('allauth.urls'), name='socialaccount_signup'),
     path('admin/', admin.site.urls),
-    path('', include('PowerZoneAPI.urls'))
+    path('', include('PowerZoneAPI.urls')),
+
 ]
